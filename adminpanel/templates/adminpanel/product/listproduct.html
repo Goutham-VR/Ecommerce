@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+</head>
+<body>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>GST</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.subcategory.category.category_name }}</td>
+                <td>{{ product.subcategory.subcategory_name }}</td>
+                <td>{{ product.brand.brand_name }}</td>
+                <td>{{ product.product_price }}</td>
+                <td>{{ product.product_stock }}</td>
+                <td>{{ product.product_gst }}</td>
+                <td>
+                    <!-- Add your edit and delete links here -->
+                    <a href="{% url 'adminpanel:editproduct' product.id %}">Edit</a>
+                    <br>
+                    <a href="{% url 'adminpanel:deleteproduct' product.id %}">Delete</a>
+                    <br>
+                    <a href="">Stock</a>
+                    <br>
+                    <a href="">Photo</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listproduct' %}";
+</script>
+{% endif %}

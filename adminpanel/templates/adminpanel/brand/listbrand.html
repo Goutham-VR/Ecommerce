@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand List</title>
+</head>
+<body>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Brand Name</th>
+                <th>Brand Logo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for brand in brands %}
+            <tr>
+                <td>{{ brand.brand_name }}</td>
+                <td><img src="{{ brand.brand_logo.url }}" alt="{{ brand.brand_name }}" width="100"></td>
+                <td>
+                    <a href="{% url 'adminpanel:editbrand' brand.id %}">Edit</a>
+                    <a href="{% url 'adminpanel:deletebrand' brand.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listbrand' %}";
+</script>
+{% endif %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Subcategory</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Subcategory Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subcategory in subcategories %}
+                <tr>
+                    <td>{{ subcategory.category.category_name }}</td>
+                    <td>{{ subcategory.subcategory_name }}</td>
+                    <td>
+                        <a href="{% url 'adminpanel:editsubcategory' subcategory.id %}">Edit</a>
+                        <a href="{% url 'adminpanel:deletesubcategory' subcategory.id %}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listsubcategory' %}";
+</script>
+{% endif %}

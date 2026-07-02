@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" required>
+        <br><br>
+        <label for="product_price">Product Price:</label>
+        <input type="number" id="product_price" name="product_price" required>
+        <br><br>
+        <label for="product_description">Product Description:</label>
+        <textarea id="product_description" name="product_description" required></textarea>
+        <br><br>
+        <label for="product_brand">Product Brand:</label>
+        <select id="sel_brand" name="sel_brand" required>
+                <option value="">Select Brand</option>
+            {% for brand in brands %}
+                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="sel_category">Select Category:</label>
+        <select id="sel_category" name="sel_category" required>
+                <option value="">Select Category</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="sel_subcategory">Select Subcategory:</label>
+        <select id="sel_subcategory" name="sel_subcategory" required>
+                <option value="">Select Subategory</option>
+            {% for subcategory in subcategories %}
+                <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="product_stock">Product Stock:</label>
+        <input type="number" id="product_stock" name="product_stock" required>
+        <br><br>
+        <label for="product_gst">Product GST:</label>
+        <input type="number" id="product_gst" name="product_gst" required>
+        <br><br>
+        <button type="submit">Add Product</button>
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $("#sel_category").change(function () {
+            var cid = $(this).val();
+            var ur = "{% url 'adminpanel:ajaxsubcategory' %}";
+            $.ajax({
+                url: ur,
+                data: { cid: cid },
+                success: function (data) {
+                    $("#sel_subcategory").html(data);
+                },
+            });
+        });
+</script>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:addproduct' %}";
+</script>
+{% endif %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subcategory</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="category">Select Category:</label>
+        <select id="sel_category" name="sel_category" required>
+            {% for category in categories %}
+                <option value="">Select Category</option>
+                <option value="{{ category.id }}">{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="subcategory_name">Subcategory Name:</label>
+        <input type="text" id="subcategory_name" name="subcategory_name" required>
+        <br><br>
+        <button type="submit">Add Subcategory</button>
+    </form>
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:addsubcategory' %}";
+</script>
+{% endif %}

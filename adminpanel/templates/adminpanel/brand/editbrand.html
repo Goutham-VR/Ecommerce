@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="brand_name">Brand Name:</label>
+        <input type="text" id="brand_name" value="{{brand.brand_name}}" name="brand_name" required>
+        <label for="brand_logo">Brand Logo:</label>
+        <input type="file" id="brand_logo" name="brand_logo" required>
+        <br><br>
+        <button type="submit">Update Brand</button>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listbrand' %}";
+</script>
+{% endif %}

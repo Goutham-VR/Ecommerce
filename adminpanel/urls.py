@@ -1,0 +1,30 @@
+from django.urls import path
+from adminpanel import views
+
+app_name = 'adminpanel'
+
+urlpatterns = [
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+    path('brand/addbrand/', views.addbrand, name='addbrand'),
+    path('brand/listbrand/', views.listbrand, name='listbrand'),
+    path('brand/deletebrand/<int:brand_id>/', views.deletebrand, name='deletebrand'),
+    path('brand/editbrand/<int:brand_id>/', views.editbrand, name='editbrand'),
+
+    path('category/addcategory/', views.addcategory, name='addcategory'),
+    path('category/listcategory/', views.listcategory, name='listcategory'),
+    path('category/deletecategory/<int:category_id>/', views.deletecategory, name='deletecategory'),
+    path('category/editcategory/<int:category_id>/', views.editcategory, name='editcategory'),
+
+    path('subcategory/addsubcategory/', views.addsubcategory, name='addsubcategory'),
+    path('subcategory/listsubcategory/', views.listsubcategory, name='listsubcategory'),
+    path('subcategory/deletesubcategory/<int:subcategory_id>/', views.deletesubcategory, name='deletesubcategory'),
+    path('subcategory/editsubcategory/<int:subcategory_id>/', views.editsubcategory, name='editsubcategory'),
+
+    path('product/addproduct/', views.addproduct, name='addproduct'),
+    path('product/ajaxsubcategory', views.ajaxsubcategory, name='ajaxsubcategory'),
+    path('product/listproduct/', views.listproduct, name='listproduct'),
+    path('product/editproduct/<int:product_id>/', views.editproduct, name='editproduct'),
+    path('product/deleteproduct/<int:product_id>/', views.deleteproduct, name='deleteproduct'),
+    
+]
