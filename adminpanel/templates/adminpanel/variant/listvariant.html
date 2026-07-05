@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Varient</title>
+</head>
+<body>
+    {% if product_variant %}
+    <table border="1" align="center" cellpadding="10" cellspacing="0">
+        <tr>
+            <td>SL NO</td>
+            <td>Size</td>
+            <td>Color</td>
+            <td>Price</td>
+            <td>Stock</td>
+            <td>Action</td>
+        </tr>
+        {% for i in product_variant %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{i.size}}</td>
+            <td>{{i.color}}</td>
+            <td>{{i.variant_price}}</td>
+            <td>{{i.stock}}</td>
+            <td>
+                <a href="{% url 'adminpanel:deletevarient' i.id product_id %}">Delete</a>
+                <a href="{% url 'adminpanel:editvarient' i.id product_id %}">Edit</a>
+                <a href="{% url 'adminpanel:addvarientstock' i.id product_id %}">Add Stock</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="6" align="center"><a href="{% url 'adminpanel:addproductvariant' product_id %}">Add Another Varient</a></td>
+        </tr>
+        <tr>
+            <td colspan="6" align="center"><a href="{% url 'adminpanel:listproduct' %}">Product List</a></td>
+        </tr>
+    </table>
+    {% else %}
+    <p>No product variants found.</p>
+    <a href="{% url 'adminpanel:addproductvariant' product_id %}">Add Varient</a>
+    {% endif %}
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listvariant' product_id %}";
+</script>
+{% endif %}

@@ -8,46 +8,83 @@
 <body>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="product_name">Product Name:</label>
-        <input type="text" id="product_name" name="product_name" required>
-        <br><br>
-        <label for="product_price">Product Price:</label>
-        <input type="number" id="product_price" name="product_price" required>
-        <br><br>
-        <label for="product_description">Product Description:</label>
-        <textarea id="product_description" name="product_description" required></textarea>
-        <br><br>
-        <label for="product_brand">Product Brand:</label>
-        <select id="sel_brand" name="sel_brand" required>
-                <option value="">Select Brand</option>
-            {% for brand in brands %}
-                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <label for="sel_category">Select Category:</label>
-        <select id="sel_category" name="sel_category" required>
-                <option value="">Select Category</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.category_name }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <label for="sel_subcategory">Select Subcategory:</label>
-        <select id="sel_subcategory" name="sel_subcategory" required>
-                <option value="">Select Subategory</option>
-            {% for subcategory in subcategories %}
-                <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <label for="product_stock">Product Stock:</label>
-        <input type="number" id="product_stock" name="product_stock" required>
-        <br><br>
-        <label for="product_gst">Product GST:</label>
-        <input type="number" id="product_gst" name="product_gst" required>
-        <br><br>
-        <button type="submit">Add Product</button>
+
+        <table cellpadding="10" cellspacing="0" border="1" align="center">
+            <tr>
+                <td><label for="product_name">Product Name:</label></td>
+                <td>
+                    <input type="text" id="product_name" name="product_name" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="product_sku">Product SKU:</label></td>
+                <td>
+                    <input type="text" name="sku" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="product_description">Product Description:</label></td>
+                <td>
+                    <textarea id="product_description" name="product_description" required></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="product_brand">Product Brand:</label></td>
+                <td>
+                    <select id="sel_brand" name="sel_brand" required>
+                        <option value="">Select Brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="sel_category">Select Category:</label></td>
+                <td>
+                    <select id="sel_category" name="sel_category" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="sel_subcategory">Select Subcategory:</label></td>
+                <td>
+                    <select id="sel_subcategory" name="sel_subcategory" required>
+                        <option value="">Select Subcategory</option>
+                        {% for subcategory in subcategories %}
+                            <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="product_gst">Product GST:</label></td>
+                <td>
+                    <input type="number" id="product_gst" name="product_gst" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Add Product</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><a href="{% url 'adminpanel:listproduct' %}">Product Lists</a></td>
+            </tr>
+        </table>
+
+    </form>
 </body>
 </html>
 

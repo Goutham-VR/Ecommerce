@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Stock</title>
+</head>
+<body>
+     
+    <form action="" method="post">
+        {% csrf_token %}
+        <table cellpadding="10" cellspacing="0" border="1" align="center">
+            <tr>
+                <td>Current Stock:</td>
+                <td>{{ product_variant.stock }}</td>
+            </tr>
+            <tr>
+                <td><label for="stock">Stock:</label></td>
+                <td><input type="number" id="stock" name="stock" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Add Stock</button>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><a href="{% url 'adminpanel:listvariant' product_id %}">Back to Variant Lists</a></td>
+            </tr>
+        </table>
+    </form>
+    
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:addvarientstock' productvariant_id product_id %}";
+</script>
+{% endif %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+</body>
+    {% if product_image %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Product Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image in product_image %}
+            <tr>
+                <td><img src="{{ image.image.url }}" alt="Product Image" width="100"></td>
+                <td>
+                    <a href="{% url 'adminpanel:deleteproductimage' image.id product_id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'adminpanel:addproductimage' product_id %}">Add More Image</a>
+
+    {% else %}
+    <p>No product images found.</p>
+    <a href="{% url 'adminpanel:addproductimage' product_id %}">Add Product Image</a>
+    {% endif %}
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listimage' product_id %}";
+</script>
+{% endif %}

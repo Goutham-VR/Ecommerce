@@ -86,10 +86,10 @@ class Product(models.Model):
 
     product_description = models.TextField()
 
-    product_price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
+    # product_price = models.DecimalField(
+    #     max_digits=10,
+    #     decimal_places=2
+    # )
 
     product_gst = models.DecimalField(
         max_digits=5,
@@ -97,12 +97,22 @@ class Product(models.Model):
         default=0
     )
 
-    product_stock = models.IntegerField(
-        default=0
-    )
+    # product_stock = models.IntegerField(
+    #     default=0
+    # )
 
     product_status = models.BooleanField(
         default=True
+    )
+
+    product_sku = models.CharField(
+    max_length=50,
+    unique=True
+    )
+
+    product_slug = models.SlugField(
+        unique=True,
+        blank=True
     )
 
     created_at = models.DateTimeField(
@@ -145,6 +155,13 @@ class ProductVariant(models.Model):
 
     stock = models.IntegerField(
         default=0
+    )
+
+    variant_price = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    null=True,
+    blank=True
     )
 
     def __str__(self):

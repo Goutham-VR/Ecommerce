@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
 from products.models import Brand
 from products.models import Category
 from products.models import SubCategory
 from products.models import Product
+from products.models import ProductImage
+from products.models import ProductVariant
+
 
 # Create your views here.
 def dashboard(request):
@@ -222,37 +226,19 @@ def addproduct(request):
     subcategories = SubCategory.objects.all()
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
-        product_price = int(request.POST.get('product_price'))
         product_description = request.POST.get('product_description')
         subcategory_id = SubCategory.objects.get(id=request.POST.get('sel_subcategory'))
         brand_id = Brand.objects.get(id=request.POST.get('sel_brand'))
-        product_stock = int(request.POST.get('product_stock'))
         product_gst = float(request.POST.get('product_gst'))
-
-        # if Product.objects.filter(
-        #     product_name=product_name,
-        #     subcategory=subcategory_id,
-        #     brand=brand_id
-        # ).exists():
-
-        #     return render(
-        #         request,
-        #         'adminpanel/product/addproduct.html',
-        #         {
-        #             'msg': 'Product already exists',
-        #             'categories': categories,
-        #             'brands': brands,
-        #             'subcategories': subcategories
-        #         }
-        #     )
+        sku = request.POST.get('sku')
 
         Product.objects.create(
             product_name=product_name,
-            product_price=product_price,
             product_description=product_description,
             subcategory=subcategory_id,
             brand=brand_id,
-            product_stock=product_stock,
+            product_slug = slugify(product_name),
+            product_sku=sku,
             product_gst=product_gst
         )
         return render(request, 'adminpanel/product/addproduct.html', {'categories': categories, 'brands': brands, 'subcategories': subcategories, 'msg': 'Product added successfully!'})
@@ -276,19 +262,17 @@ def editproduct(request, product_id):
 
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
-        product_price = float(request.POST.get('product_price'))
         product_description = request.POST.get('product_description')
         subcategory_id = SubCategory.objects.get(id=request.POST.get('sel_subcategory'))
         brand_id = Brand.objects.get(id=request.POST.get('sel_brand'))
-        product_stock = int(request.POST.get('product_stock'))
         product_gst = float(request.POST.get('product_gst'))
         product.product_name = product_name
-        product.product_price = product_price
         product.product_description = product_description
         product.subcategory = subcategory_id
         product.brand = brand_id
-        product.product_stock = product_stock
         product.product_gst = product_gst
+        product.product_sku = request.POST.get('sku')
+        product.product_slug = slugify(product_name)
         product.save()
 
         return render(
@@ -309,3 +293,77 @@ def deleteproduct(request, product_id):
     product = get_object_or_404(Product,id=product_id)
     product.delete()
     return render(request, 'adminpanel/product/listproduct.html', {'msg': 'Product deleted successfully!'})
+
+def listimage(request, product_id):
+    product_image = ProductImage.objects.filter(product=product_id)
+    return render(request, 'adminpanel/productimage/listimage.html', {'product_image': product_image,'product_id': product_id})
+
+def addproductimage(request, product_id):
+    product = get_object_or_404(Product,id=product_id)
+    if request.method == 'POST':
+        product_image = request.FILES.get('product_image')
+        product.productimage_set.create(image=product_image,product=product)
+        return render(request, 'adminpanel/productimage/addimage.html', {'msg': 'Product image added successfully!', 'product': product,'product_id': product_id})
+    else:
+        return render(request, 'adminpanel/productimage/addimage.html', {'product': product,'product_id': product_id})
+    
+def deleteproductimage(request, productimage_id,product_id):
+    product_image = get_object_or_404(ProductImage,id=productimage_id)
+    product_image.delete()
+    return render(request, 'adminpanel/productimage/listimage.html', {'msg': 'Product image deleted successfully!', 'product_id': product_id})
+
+def listvariant(request, product_id):
+    product_variant = ProductVariant.objects.filter(product=product_id)
+    return render(request, 'adminpanel/variant/listvariant.html', {'product_variant': product_variant,'product_id': product_id})
+
+def addproductvariant(request, product_id):
+    product = get_object_or_404(Product,id=product_id)
+    if request.method == 'POST':
+        size = request.POST.get('size')
+        color = request.POST.get('color')
+        stock = int(request.POST.get('stock'))
+        price = float(request.POST.get('variant_price'))
+        product = Product.objects.get(id=product_id)
+        ProductVariant.objects.create(
+            product=product,
+            size=size,
+            color=color,
+            stock=stock,
+            variant_price=price
+        )
+        return render(request, 'adminpanel/variant/addvariant.html', {'msg': 'Product variant added successfully!', 'product': product,'product_id': product_id})
+    else:
+        return render(request, 'adminpanel/variant/addvariant.html', {'product': product,'product_id': product_id})
+    
+def deletevarient(request, productvariant_id,product_id):
+    product_variant = get_object_or_404(ProductVariant,id=productvariant_id)
+    product_variant.delete()
+    return render(request, 'adminpanel/variant/listvariant.html', {'msg': 'Product variant deleted successfully!', 'product_id': product_id})
+
+def addvarientstock(request, productvariant_id,product_id):
+    product_variant = get_object_or_404(ProductVariant,id=productvariant_id)
+    current_stock = product_variant.stock
+    if request.method == 'POST':
+        stock = int(request.POST.get('stock'))
+        product_variant.stock += stock
+        product_variant.save()
+        return render(request, 'adminpanel/variant/addvarientstock.html', {'msg': 'Product variant stock updated successfully!', 'product_variant': product_variant,'product_id': product_id,'productvariant_id': productvariant_id,'current_stock': current_stock})
+    else:
+        return render(request, 'adminpanel/variant/addvarientstock.html', {'product_variant': product_variant,'product_id': product_id,'current_stock': current_stock,'productvariant_id': productvariant_id})
+    
+def editvarient(request, productvariant_id,product_id):
+    product_variant = get_object_or_404(ProductVariant,id=productvariant_id)
+    if request.method == 'POST':
+        size = request.POST.get('size')
+        color = request.POST.get('color')
+        stock = int(request.POST.get('stock'))
+        price = float(request.POST.get('variant_price'))
+
+        product_variant.size = size
+        product_variant.color = color
+        product_variant.stock = stock
+        product_variant.variant_price = price
+        product_variant.save()
+        return render(request, 'adminpanel/variant/editvarient.html', {'msg': 'Product variant updated successfully!', 'product_variant': product_variant,'productvariant_id':productvariant_id,'product_id': product_id})
+    else:
+        return render(request, 'adminpanel/variant/editvarient.html', {'product_variant': product_variant,'product_id': product_id,'productvariant_id':productvariant_id})

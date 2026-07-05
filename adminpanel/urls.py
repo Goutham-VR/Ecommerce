@@ -26,5 +26,14 @@ urlpatterns = [
     path('product/listproduct/', views.listproduct, name='listproduct'),
     path('product/editproduct/<int:product_id>/', views.editproduct, name='editproduct'),
     path('product/deleteproduct/<int:product_id>/', views.deleteproduct, name='deleteproduct'),
-    
+
+    path('productimage/listimage/<int:product_id>/', views.listimage, name='listimage'),
+    path('productimage/addproductimage/<int:product_id>/', views.addproductimage, name='addproductimage'),
+    path('productimage/deleteproductimage/<int:productimage_id>/<int:product_id>/', views.deleteproductimage, name='deleteproductimage'),
+
+    path('productvariant/listvariant/<int:product_id>/', views.listvariant, name='listvariant'),
+    path('productvariant/addproductvariant/<int:product_id>/', views.addproductvariant, name='addproductvariant'),
+    path('productvariant/deletevarient/<int:productvariant_id>/<int:product_id>/', views.deletevarient, name='deletevarient'),
+    path('productvariant/editvarient/<int:productvariant_id>/<int:product_id>/', views.editvarient, name='editvarient'),
+    path('productvariant/addvarientstock/<int:productvariant_id>/<int:product_id>/', views.addvarientstock, name='addvarientstock'),
 ]

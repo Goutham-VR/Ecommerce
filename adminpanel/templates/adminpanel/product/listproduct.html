@@ -6,7 +6,49 @@
     <title>Products</title>
 </head>
 <body>
-    <table border="1">
+    <table border="1" cellpadding="10" cellspacing="0" align="center">
+        <tr>
+            <td>Brand</td>
+            <td>
+                <select name="" id="">
+                    <option value="">Select Brand</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>
+                <select name="" id="">
+                    <option value="">Select Category</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Subcategory</td>
+            <td>
+                <select name="" id="">
+                    <option value="">Select Subcategory</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Search</td>
+            <td>
+                <input type="text" name="txt_search" id="">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table border="1" cellpadding="10" cellspacing="0" align="center">
         <thead>
             <tr>
                 <th>Product Name</th>
@@ -35,12 +77,15 @@
                     <br>
                     <a href="{% url 'adminpanel:deleteproduct' product.id %}">Delete</a>
                     <br>
-                    <a href="">Stock</a>
+                    <a href="{% url 'adminpanel:listimage' product.id %}">Gallery</a>
                     <br>
-                    <a href="">Photo</a>
+                    <a href="{% url 'adminpanel:listvariant' product.id %}">Varients</a>
                 </td>
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="8" align="center"><a href="{% url 'adminpanel:addproduct' %}">Add Product</a></td>
+            </tr>
         </tbody>
 </body>
 </html>

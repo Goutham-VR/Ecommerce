@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Images</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="product_image">Product Image:</label>
+        <input type="file" id="product_image" name="product_image" required>
+        <br><br>
+        <button type="submit">Add Product Image</button>
+    </form>
+    <a href="{% url 'adminpanel:listimage' product_id %}">Back to Product Images</a>
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:addproductimage' product_id %}";
+</script>
+{% endif %}
