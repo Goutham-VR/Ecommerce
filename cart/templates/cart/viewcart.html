@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+</head>
+<body>
+    <table border="1" cellpadding="10" cellspacing="0" align="center">
+
+    <tr>
+        <th>Product</th>
+        <th>Variant</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+        <th>Action</th>
+    </tr>
+
+    {% for item in items %}
+    <tr class="cart-row">
+
+        <td>
+            {{ item.variant.product.product_name }}
+        </td>
+
+        <td>
+            {{ item.variant.size }}
+            -
+            {{ item.variant.color }}
+        </td>
+
+        <td class="price">
+            {{ item.variant.variant_price }}
+        </td>
+
+        <td>
+            <input
+                type="number"
+                class="qty"
+                value="{{ item.quantity }}"
+                min="1"
+                max="{{ item.variant.stock }}"
+            >
+        </td>
+
+        <td class="subtotal">
+            {{ item.subtotal }}
+        </td>
+
+        <td>
+            <a href="">
+                Remove
+            </a>
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <td colspan="4">
+            Grand Total
+        </td>
+
+        <td id="grand_total">
+            ₹{{ cart.grand_total }}
+        </td>
+
+        <td></td>
+    </tr>
+
+    <tr>
+        <td colspan="6" align="right">
+
+            <a href="">
+                Proceed To Checkout
+            </a>
+
+        </td>
+    </tr>
+
+</table>
+
+<script>
+
+function calculateCart() {
+
+    let grandTotal = 0;
+
+    document.querySelectorAll(".cart-row").forEach(function(row){
+
+        let price =
+            parseFloat(
+                row.querySelector(".price")
+                .innerText
+            );
+
+        let qty =
+            parseInt(
+                row.querySelector(".qty")
+                .value
+            );
+
+        let subtotal = price * qty;
+
+        row.querySelector(".subtotal")
+        .innerText =
+        "₹" + subtotal.toFixed(2);
+
+        grandTotal += subtotal;
+
+    });
+
+    document.getElementById("grand_total")
+    .innerText =
+    "₹" + grandTotal.toFixed(2);
+
+}
+
+document.querySelectorAll(".qty")
+.forEach(function(input){
+
+    input.addEventListener(
+        "input",
+        calculateCart
+    );
+
+});
+
+</script>
+</body>
+</html>

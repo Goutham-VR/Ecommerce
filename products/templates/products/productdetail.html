@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.product_name }}</title>
+</head>
+<body>
+
+    <h2>{{ product.product_name }}</h2>
+
+    <p>
+        <b>Brand:</b>
+        {{ product.brand.brand_name }}
+    </p>
+
+    <p>
+        <b>Category:</b>
+        {{ product.subcategory.section.category.category_name }}
+    </p>
+
+    <p>
+        <b>Section:</b>
+        {{ product.subcategory.section.section_name }}
+    </p>
+
+    <p>
+        <b>Subcategory:</b>
+        {{ product.subcategory.subcategory_name }}
+    </p>
+
+    <p>
+        <b>Description:</b><br>
+        {{ product.product_description }}
+    </p>
+
+    <p>
+        <b>GST:</b>
+        {{ product.product_gst }}%
+    </p>
+
+    <hr>
+
+    <h3>Product Images</h3>
+
+    {% for image in product.productimage_set.all %}
+        <img
+            src="{{ image.image.url }}"
+            width="200"
+            height="200"
+        >
+    {% empty %}
+        No Images Available
+    {% endfor %}
+
+    <hr>
+
+    <h3>Select Variant</h3>
+
+    <form method="post" action="{% url 'cart:addtocart' variants.0.id %}">
+        {% csrf_token %}
+
+        <select name="variant_id" id="variant_select">
+
+            {% for variant in variants %}
+            <option
+                value="{{ variant.id }}"
+                data-price="{{ variant.variant_price }}"
+            >
+                {{ variant.size }}
+                -
+                {{ variant.color }}
+                -
+                ₹{{ variant.variant_price }}
+            </option>
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+        <h4>
+            Price:
+            ₹<span id="price">
+                {{ variants.0.variant_price }}
+            </span>
+        </h4>
+
+        <br>
+
+        <input
+            type="number"
+            name="quantity"
+            value="1"
+            min="1"
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Add To Cart
+        </button>
+
+    </form>
+
+    <script>
+
+        document
+        .getElementById("variant_select")
+        .addEventListener("change", function() {
+
+            let price =
+                this.options[this.selectedIndex]
+                .getAttribute("data-price");
+
+            document.getElementById("price")
+            .innerHTML = price;
+
+        });
+
+    </script>
+
+</body>
+</html>

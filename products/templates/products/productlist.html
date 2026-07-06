@@ -6,24 +6,42 @@
     <title>Products</title>
 </head>
 <body>
-    <table border="1">
+    <table cellpadding="10" cellspacing="0" border="1" align="center">
     <tr>
         <th>Name</th>
         <th>Brand</th>
         <th>Category</th>
-        <th>Details</th>
+        <th>Section</th>
+        <th>Subcategory</th>
+        <th>Price</th>
+        <th>Action</th>
     </tr>
 
     {% for product in products %}
-    <tr>
-        <td>{{ product.product_name }}</td>
-        <td>{{ product.brand.brand_name }}</td>
-        <td>{{ product.subcategory.category.category_name }}</td>
-        <td>
-            <a href="">View</a>
-        </td>
-    </tr>
-    {% endfor %}
+<tr>
+    <td>{{ product.product_name }}</td>
+    <td>{{ product.brand.brand_name }}</td>
+    <td>{{ product.subcategory.section.category.category_name }}</td>
+    <td>{{ product.subcategory.section.section_name }}</td>
+    <td>{{ product.subcategory.subcategory_name }}</td>
+
+    <td>
+    {% with variant=product.productvariant_set.first %}
+        {% if variant %}
+            ₹{{ variant.variant_price }}
+        {% else %}
+            No Variant
+        {% endif %}
+    {% endwith %}
+</td>
+
+    <td>
+        <a href="{% url 'products:productdetail' product.product_slug %}">
+            View
+        </a>
+    </td>
+</tr>
+{% endfor %}
 </table>
 </body>
 </html>
