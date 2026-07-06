@@ -52,12 +52,14 @@
         <thead>
             <tr>
                 <th>Product Name</th>
+                <th>SKU</th>
                 <th>Category</th>
                 <th>Subcategory</th>
                 <th>Brand</th>
-                <th>Price</th>
-                <th>Stock</th>
+                <th>Slug</th>
                 <th>GST</th>
+                <th>Created</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -65,26 +67,33 @@
             {% for product in products %}
             <tr>
                 <td>{{ product.product_name }}</td>
+                <td>{{ product.product_sku }}</td>
                 <td>{{ product.subcategory.category.category_name }}</td>
                 <td>{{ product.subcategory.subcategory_name }}</td>
                 <td>{{ product.brand.brand_name }}</td>
-                <td>{{ product.product_price }}</td>
-                <td>{{ product.product_stock }}</td>
+                <td>{{ product.product_slug }}</td>
                 <td>{{ product.product_gst }}</td>
+                <td>{{ product.created_at }}</td>
+                <td>{% if product.product_status %}
+                    Active
+                    {% else %}
+                    Inactive
+                    {% endif %}
+                </td>
                 <td>
                     <!-- Add your edit and delete links here -->
                     <a href="{% url 'adminpanel:editproduct' product.id %}">Edit</a>
                     <br>
                     <a href="{% url 'adminpanel:deleteproduct' product.id %}">Delete</a>
                     <br>
-                    <a href="{% url 'adminpanel:listimage' product.id %}">Gallery</a>
+                    <a href="{% url 'adminpanel:listimage' product.id %}">Photo</a>
                     <br>
                     <a href="{% url 'adminpanel:listvariant' product.id %}">Varients</a>
                 </td>
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="8" align="center"><a href="{% url 'adminpanel:addproduct' %}">Add Product</a></td>
+                <td colspan="10" align="center"><a href="{% url 'adminpanel:addproduct' %}">Add Product</a></td>
             </tr>
         </tbody>
 </body>

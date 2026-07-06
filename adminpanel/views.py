@@ -224,26 +224,79 @@ def addproduct(request):
     categories = Category.objects.all()
     brands = Brand.objects.all()
     subcategories = SubCategory.objects.all()
+
     if request.method == 'POST':
+
         product_name = request.POST.get('product_name')
         product_description = request.POST.get('product_description')
-        subcategory_id = SubCategory.objects.get(id=request.POST.get('sel_subcategory'))
-        brand_id = Brand.objects.get(id=request.POST.get('sel_brand'))
-        product_gst = float(request.POST.get('product_gst'))
+
+        subcategory = SubCategory.objects.get(
+            id=request.POST.get('sel_subcategory')
+        )
+
+        brand = Brand.objects.get(
+            id=request.POST.get('sel_brand')
+        )
+
+        product_gst = request.POST.get('product_gst')
         sku = request.POST.get('sku')
+
+        slug = slugify(product_name)
+
+        if Product.objects.filter(
+            product_sku=sku
+        ).exists():
+
+            return render(
+                request,
+                'adminpanel/product/addproduct.html',
+                {
+                    'categories': categories,
+                    'brands': brands,
+                    'subcategories': subcategories,
+                    'msg': 'SKU already exists'
+                }
+            )
+        
+        slug = slugify(product_name)
+        count = 1
+        temp_slug = slug
+        while Product.objects.filter(product_slug=temp_slug).exists():
+            count += 1
+            temp_slug = f"{slug}-{count}"
+            
+        slug = temp_slug
 
         Product.objects.create(
             product_name=product_name,
             product_description=product_description,
-            subcategory=subcategory_id,
-            brand=brand_id,
-            product_slug = slugify(product_name),
+            subcategory=subcategory,
+            brand=brand,
+            product_slug=slug,
             product_sku=sku,
             product_gst=product_gst
         )
-        return render(request, 'adminpanel/product/addproduct.html', {'categories': categories, 'brands': brands, 'subcategories': subcategories, 'msg': 'Product added successfully!'})
-    else:
-        return render(request, 'adminpanel/product/addproduct.html', {'categories': categories, 'brands': brands, 'subcategories': subcategories})
+
+        return render(
+            request,
+            'adminpanel/product/addproduct.html',
+            {
+                'categories': categories,
+                'brands': brands,
+                'subcategories': subcategories,
+                'msg': 'Product added successfully!'
+            }
+        )
+
+    return render(
+        request,
+        'adminpanel/product/addproduct.html',
+        {
+            'categories': categories,
+            'brands': brands,
+            'subcategories': subcategories
+        }
+    )
 
 def ajaxsubcategory(request):
     category_id = request.GET.get('cid')
