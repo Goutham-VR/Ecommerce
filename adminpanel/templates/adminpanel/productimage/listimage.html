@@ -8,7 +8,7 @@
 <body>
 </body>
     {% if product_image %}
-    <table border="1">
+    <table cellpadding="10" cellspacing="0" border="1" align="center">
         <thead>
             <tr>
                 <th>Product Image</th>
@@ -24,9 +24,14 @@
                 </td>
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="2">
+                    <a href="{% url 'adminpanel:addproductimage' product_id %}">Add More Image</a>
+                </td>
+            </tr>
         </tbody>
     </table>
-    <a href="{% url 'adminpanel:addproductimage' product_id %}">Add More Image</a>
+    
 
     {% else %}
     <p>No product images found.</p>

@@ -7,6 +7,7 @@ from products.models import SubCategory
 from products.models import Product
 from products.models import ProductImage
 from products.models import ProductVariant
+from products.models import Section
 
 
 # Create your views here.
@@ -146,16 +147,91 @@ def editcategory(request, category_id):
     else:
         return render(request, 'adminpanel/category/editcategory.html', {'category': category})
 
+# Section Views
+def addsection(request):
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        section_name = request.POST.get('section_name')
+        category_id = Category.objects.get(id=request.POST.get('sel_category'))
+
+        if Section.objects.filter(
+            section_name=section_name,
+            category=category_id
+        ).exists():
+
+            return render(
+                request,
+                'adminpanel/section/addsection.html',
+                {
+                    'msg': 'Section already exists',
+                    'categories': categories
+                }
+            )
+        Section.objects.create(section_name=section_name, category=category_id)
+        return render(request, 'adminpanel/section/addsection.html', {'msg': 'Section added successfully!'})
+    else:
+        return render(request, 'adminpanel/section/addsection.html', {'categories': categories})
+
+def listsection(request):
+    sections = Section.objects.all()
+    return render(request, 'adminpanel/section/listsection.html', {'sections': sections})
+
+def deletesection(request, section_id):
+    section = get_object_or_404(Section,id=section_id)
+    section.delete()
+    return render(request, 'adminpanel/section/listsection.html', {'msg': 'Section deleted successfully!'})
+
+def editsection(request, section_id):
+    section = get_object_or_404(Section,id=section_id)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        section_name = request.POST.get('section_name')
+        category_id = Category.objects.get(id=request.POST.get('sel_category'))
+
+        if Section.objects.filter(
+            section_name=section_name,
+            category=category_id
+        ).exclude(id=section_id).exists():
+
+            return render(
+                request,
+                'adminpanel/section/editsection.html',
+                {
+                    'msg': 'Section already exists',
+                    'section': section,
+                    'categories': categories
+                }
+            )
+
+        section.section_name = section_name
+        section.category = category_id
+        section.save()
+
+        return render(
+            request,
+            'adminpanel/section/editsection.html',
+            {
+                'msg': 'Section updated successfully!',
+                'section': section,
+                'categories': categories
+            }
+        )
+    else:
+        return render(request, 'adminpanel/section/editsection.html', {'section': section, 'categories': categories})
+
 # SubCategory Views
 def addsubcategory(request):
     categories = Category.objects.all()
+    sections = Section.objects.all()
     if request.method == 'POST':
         subcategory_name = request.POST.get('subcategory_name')
         category_id = Category.objects.get(id=request.POST.get('sel_category'))
+        section_id = Section.objects.get(id=request.POST.get('sel_section'))
 
         if SubCategory.objects.filter(
             subcategory_name=subcategory_name,
-            category=category_id
+            section=section_id
         ).exists():
 
             return render(
@@ -163,14 +239,20 @@ def addsubcategory(request):
                 'adminpanel/subcategory/addsubcategory.html',
                 {
                     'msg': 'Subcategory already exists',
-                    'categories': categories
+                    'categories': categories,
+                    'sections': sections
                 }
             )
-        SubCategory.objects.create(subcategory_name=subcategory_name, category=category_id)
+        SubCategory.objects.create(subcategory_name=subcategory_name,section=section_id)
         return render(request, 'adminpanel/subcategory/addsubcategory.html', {'msg': 'Subcategory added successfully!'})
     else:
-        return render(request, 'adminpanel/subcategory/addsubcategory.html', {'categories': categories})
-    
+        return render(request, 'adminpanel/subcategory/addsubcategory.html', {'categories': categories, 'sections': sections})
+
+def ajaxsection(request):
+    category_id = request.GET.get('cid')
+    sections = Section.objects.filter(category=category_id)
+    return render(request, 'adminpanel/ajaxpages/ajaxsection.html', {'sections': sections})
+
 def listsubcategory(request):
     subcategories = SubCategory.objects.all()
     return render(request, 'adminpanel/subcategory/listsubcategory.html', {'subcategories': subcategories})
@@ -183,14 +265,16 @@ def deletesubcategory(request, subcategory_id):
 def editsubcategory(request, subcategory_id):
     subcategory = get_object_or_404(SubCategory,id=subcategory_id)
     categories = Category.objects.all()
+    sections = Section.objects.filter(category=subcategory.section.category)
 
     if request.method == 'POST':
         subcategory_name = request.POST.get('subcategory_name')
         category_id = Category.objects.get(id=request.POST.get('sel_category'))
+        section_id = Section.objects.get(id=request.POST.get('sel_section'))
 
         if SubCategory.objects.filter(
             subcategory_name=subcategory_name,
-            category=category_id
+            section=section_id
         ).exclude(id=subcategory_id).exists():
 
             return render(
@@ -199,12 +283,13 @@ def editsubcategory(request, subcategory_id):
                 {
                     'msg': 'Subcategory already exists',
                     'subcategory': subcategory,
-                    'categories': categories
+                    'categories': categories,
+                    'sections': sections
                 }
             )
 
         subcategory.subcategory_name = subcategory_name
-        subcategory.category = category_id
+        subcategory.section = section_id
         subcategory.save()
 
         return render(
@@ -213,11 +298,12 @@ def editsubcategory(request, subcategory_id):
             {
                 'msg': 'Subcategory updated successfully!',
                 'subcategory': subcategory,
-                'categories': categories
+                'categories': categories,
+                'sections': sections
             }
         )
     else:
-        return render(request, 'adminpanel/subcategory/editsubcategory.html', {'subcategory': subcategory, 'categories': categories})
+        return render(request, 'adminpanel/subcategory/editsubcategory.html', {'subcategory': subcategory, 'categories': categories, 'sections': sections})
 
 # Product Views
 def addproduct(request):
@@ -299,8 +385,8 @@ def addproduct(request):
     )
 
 def ajaxsubcategory(request):
-    category_id = request.GET.get('cid')
-    subcategories = SubCategory.objects.filter(category=category_id)
+    section_id = request.GET.get('sid')
+    subcategories = SubCategory.objects.filter(section=section_id)
     return render(request, 'adminpanel/ajaxpages/ajaxsubcategory.html', {'subcategories': subcategories})
 
 def listproduct(request):
@@ -311,7 +397,8 @@ def editproduct(request, product_id):
     product = get_object_or_404(Product,id=product_id)
     categories = Category.objects.all()
     brands = Brand.objects.all()
-    subcategories = SubCategory.objects.filter(category=product.subcategory.category)
+    subcategories = SubCategory.objects.filter(section=product.subcategory.section)
+    sections=Section.objects.filter(category=product.subcategory.section.category)
 
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
@@ -336,11 +423,12 @@ def editproduct(request, product_id):
                 'product': product,
                 'categories': categories,
                 'brands': brands,
-                'subcategories': subcategories
+                'subcategories': subcategories,
+                'sections':sections
             }
         )
     else:
-        return render(request, 'adminpanel/product/editproduct.html', {'product': product, 'categories': categories, 'brands': brands, 'subcategories': subcategories})
+        return render(request, 'adminpanel/product/editproduct.html', {'product': product, 'categories': categories, 'brands': brands, 'subcategories': subcategories,'sections':sections})
     
 def deleteproduct(request, product_id):
     product = get_object_or_404(Product,id=product_id)

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Section</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table border="1" cellpadding="10" cellspacing="0" align="center">
+            <tr>
+                <td>Select Category:</td>
+                <td>
+                    <select id="sel_category" name="sel_category" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            <tr>
+                <td>Section Name:</td>
+                <td><input type="text" name="section_name" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Add Section</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <a href="{% url 'adminpanel:listsection' %}">List Section</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:addsection' %}";
+</script>
+{% endif %}
+</body>
+</html>

@@ -8,12 +8,22 @@
 <body>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="product_image">Product Image:</label>
-        <input type="file" id="product_image" name="product_image" required>
-        <br><br>
-        <button type="submit">Add Product Image</button>
+        <table cellpadding="10" cellspacing="0" border="1" align="center">
+            <tr>
+                <td><label for="product_image">Product Image:</label></td>
+                <td><input type="file" id="product_image" name="product_image" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><button type="submit">Add Product Image</button></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <a href="{% url 'adminpanel:listimage' product_id %}">Back to Product Images</a>
+                </td>
+            </tr>
+        </table>
     </form>
-    <a href="{% url 'adminpanel:listimage' product_id %}">Back to Product Images</a>
+    
 </body>
 </html>
 

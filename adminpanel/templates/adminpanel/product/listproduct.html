@@ -54,6 +54,7 @@
                 <th>Product Name</th>
                 <th>SKU</th>
                 <th>Category</th>
+                <th>Section</th>
                 <th>Subcategory</th>
                 <th>Brand</th>
                 <th>Slug</th>
@@ -68,7 +69,8 @@
             <tr>
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.product_sku }}</td>
-                <td>{{ product.subcategory.category.category_name }}</td>
+                <td>{{ product.subcategory.section.category.category_name }}</td>
+                <td>{{ product.subcategory.section.section_name }}</td>
                 <td>{{ product.subcategory.subcategory_name }}</td>
                 <td>{{ product.brand.brand_name }}</td>
                 <td>{{ product.product_slug }}</td>
@@ -93,7 +95,7 @@
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="10" align="center"><a href="{% url 'adminpanel:addproduct' %}">Add Product</a></td>
+                <td colspan="11" align="center"><a href="{% url 'adminpanel:addproduct' %}">Add Product</a></td>
             </tr>
         </tbody>
 </body>

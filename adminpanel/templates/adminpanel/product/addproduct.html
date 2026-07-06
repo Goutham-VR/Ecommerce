@@ -56,13 +56,23 @@
             </tr>
 
             <tr>
+                <td>
+                    <label for="section">Select Section:</label></td>
+                <td>
+                    <select id="sel_section" name="sel_section" required>
+                        <option value="">Select Section</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
                 <td><label for="sel_subcategory">Select Subcategory:</label></td>
                 <td>
                     <select id="sel_subcategory" name="sel_subcategory" required>
                         <option value="">Select Subcategory</option>
-                        {% for subcategory in subcategories %}
+                        <!-- {% for subcategory in subcategories %}
                             <option value="{{ subcategory.id }}">{{ subcategory.subcategory_name }}</option>
-                        {% endfor %}
+                        {% endfor %} -->
                     </select>
                 </td>
             </tr>
@@ -87,15 +97,28 @@
     </form>
 </body>
 </html>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $("#sel_category").change(function () {
-            var cid = $(this).val();
+<script>
+    $("#sel_category").change(function () {
+        var cid = $(this).val();
+        var ur = "{% url 'adminpanel:ajaxsection' %}";
+        $.ajax({
+            url: ur,
+            data: { cid: cid },
+            success: function (data) {
+                $("#sel_section").html(data);
+            },
+        });
+    });
+</script>
+
+<script>
+        $("#sel_section").change(function () {
+            var sid = $(this).val();
             var ur = "{% url 'adminpanel:ajaxsubcategory' %}";
             $.ajax({
                 url: ur,
-                data: { cid: cid },
+                data: { sid: sid },
                 success: function (data) {
                     $("#sel_subcategory").html(data);
                 },

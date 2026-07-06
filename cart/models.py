@@ -2,9 +2,7 @@ from django.db import models
 from accounts.models import User
 from products.models import ProductVariant
 
-
 class Cart(models.Model):
-
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE

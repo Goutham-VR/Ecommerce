@@ -1,32 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subcategory</title>
 </head>
+
 <body>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="category">Select Category:</label>
-        <select id="sel_category" name="sel_category" required>
-            <option value="">Select Category</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.category_name }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <label for="subcategory_name">Subcategory Name:</label>
-        <input type="text" id="subcategory_name" name="subcategory_name" required>
-        <br><br>
-        <button type="submit">Add Subcategory</button>
+        <table cellpadding="10" cellspacing="0" border="1" align="center">
+            <tr>
+                <td>
+                    <label for="category">Select Category:</label>
+                </td>
+                <td>
+                    <select id="sel_category" name="sel_category" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="section">Select Section:</label></td>
+                <td>
+                    <select id="sel_section" name="sel_section" required>
+                        <option value="">Select Section</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="subcategory_name">Subcategory Name:</label>
+                </td>
+                <td>
+                    <input type="text" id="subcategory_name" name="subcategory_name" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Add Subcategory</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <a href="{% url 'adminpanel:listsubcategory' %}">List Subcategory</a>
+                </td>
+            </tr>
+        </table>
     </form>
 </body>
+
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_category").change(function () {
+        var cid = $(this).val();
+        var ur = "{% url 'adminpanel:ajaxsection' %}";
+        $.ajax({
+            url: ur,
+            data: { cid: cid },
+            success: function (data) {
+                $("#sel_section").html(data);
+            },
+        });
+    });
+</script>
 
 {% if msg %}
 <script>
     alert("{{ msg }}");
-    window.location="{% url 'adminpanel:addsubcategory' %}";
+    window.location = "{% url 'adminpanel:addsubcategory' %}";
 </script>
 {% endif %}

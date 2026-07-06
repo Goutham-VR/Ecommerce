@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Section</title>
+</head>
+<body>
+    <table border="1" cellpadding="10" cellspacing="0" align="center">
+        <tr>
+            <th>SL NO</th>
+            <th>Section Name</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for section in sections %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ section.section_name }}</td>
+            <td>{{ section.category.category_name }}</td>
+            <td>
+                <a href="{% url 'adminpanel:editsection' section.id %}">Edit</a>
+                <a href="{% url 'adminpanel:deletesection' section.id %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4" align="center">
+                <a href="{% url 'adminpanel:addsection' %}">Add Section</a>
+            </td>
+        </tr>
+    </table>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'adminpanel:listsection' %}";
+</script>
+{% endif %}
+</body>
+</html>

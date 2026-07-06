@@ -16,7 +16,13 @@ urlpatterns = [
     path('category/deletecategory/<int:category_id>/', views.deletecategory, name='deletecategory'),
     path('category/editcategory/<int:category_id>/', views.editcategory, name='editcategory'),
 
+    path('section/addsection/', views.addsection, name='addsection'),
+    path('section/listsection/', views.listsection, name='listsection'),
+    path('section/deletesection/<int:section_id>/', views.deletesection, name='deletesection'),
+    path('section/editsection/<int:section_id>/', views.editsection, name='editsection'),
+
     path('subcategory/addsubcategory/', views.addsubcategory, name='addsubcategory'),
+    path('subcategory/ajaxsection', views.ajaxsection, name='ajaxsection'),
     path('subcategory/listsubcategory/', views.listsubcategory, name='listsubcategory'),
     path('subcategory/deletesubcategory/<int:subcategory_id>/', views.deletesubcategory, name='deletesubcategory'),
     path('subcategory/editsubcategory/<int:subcategory_id>/', views.editsubcategory, name='editsubcategory'),

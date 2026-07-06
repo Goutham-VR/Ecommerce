@@ -8,10 +8,12 @@
 <body>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <table border="1">
+        <table border="1" cellpadding="10" cellspacing="0" align="center">
             <thead>
                 <tr>
+                    <th>SL NO</th>
                     <th>Category</th>
+                    <th>Section</th>
                     <th>Subcategory Name</th>
                     <th>Actions</th>
                 </tr>
@@ -19,7 +21,9 @@
             <tbody>
                 {% for subcategory in subcategories %}
                 <tr>
-                    <td>{{ subcategory.category.category_name }}</td>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ subcategory.section.category.category_name }}</td>
+                    <td>{{ subcategory.section.section_name }}</td>
                     <td>{{ subcategory.subcategory_name }}</td>
                     <td>
                         <a href="{% url 'adminpanel:editsubcategory' subcategory.id %}">Edit</a>
@@ -27,6 +31,11 @@
                     </td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="5" align="center">
+                        <a href="{% url 'adminpanel:addsubcategory' %}">Add Subcategory</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
 </body>
