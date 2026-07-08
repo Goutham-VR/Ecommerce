@@ -9,11 +9,11 @@ def addtocart(request, variant_id):
         return redirect('accounts:userlogin')
 
     variant = ProductVariant.objects.get(
-        id=request.POST.get('variant_id')
+        id=variant_id
     )
 
     quantity = int(
-        request.POST.get('quantity')
+        request.POST.get('quantity', 1)
     )
 
     cart, created = Cart.objects.get_or_create(
@@ -27,12 +27,24 @@ def addtocart(request, variant_id):
 
     if not created:
         cart_item.quantity += quantity
+
+        if cart_item.quantity > variant.stock:
+            cart_item.quantity = variant.stock
+
     else:
-        cart_item.quantity = quantity
+        cart_item.quantity = min(
+            quantity,
+            variant.stock
+        )
 
     cart_item.save()
 
-    return redirect('cart:viewcart')
+    return redirect(
+        'products:productdetail',
+        variant.product.product_slug
+    )
+    return render(request,'products/productdetail.html',{'msg':"Product"})
+
 
 def viewcart(request):
 
