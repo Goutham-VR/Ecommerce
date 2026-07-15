@@ -35,13 +35,7 @@
         </td>
 
         <td>
-            <input
-                type="number"
-                class="qty"
-                value="{{ item.quantity }}"
-                min="1"
-                max="{{ item.variant.stock }}"
-            >
+            <input type="number" class="qty" value="{{ item.quantity }}" min="1" max="{{ item.variant.stock }}" id="qty" onchange="updateQuantity(this, {{ item.id }})">
         </td>
 
         <td class="subtotal">
@@ -80,6 +74,42 @@
     </tr>
 
 </table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    function updateQuantity(input, itemid)
+    {
+        let qnty = input.value;
+
+        console.log("Item ID:", itemid);
+        console.log("Quantity:", qnty);
+        
+        var ur = "{% url 'cart:ajaxupdateqnty' %}";
+        $.ajax({
+            url: ur,
+            data: { itemid: itemid, qnty:qnty },
+            success: function (data) {
+                $("#sel_section").html(data);
+            },
+        });
+    }
+</script>
+
+<!-- <script>
+    $("#qty").change(function () {
+        var cartitemid = document.getElementById('txt_cartitem').value;
+        console.log(cartitemid);
+        var ur = "";
+        $.ajax({
+            url: ur,
+            data: { cartitemid: cartitemid },
+            success: function (data) {
+                $("#sel_section").html(data);
+            },
+        });
+    });
+</script> -->
 
 <script>
 
@@ -128,5 +158,7 @@ document.querySelectorAll(".qty")
 });
 
 </script>
+
+
 </body>
 </html>

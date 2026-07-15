@@ -43,8 +43,7 @@ def addtocart(request, variant_id):
         'products:productdetail',
         variant.product.product_slug
     )
-    return render(request,'products/productdetail.html',{'msg':"Product"})
-
+    # return render(request,'products/productdetail.html',{'msg':"Added to Cart"})
 
 def viewcart(request):
 
@@ -62,3 +61,13 @@ def viewcart(request):
             'items': items
         }
     )
+
+def ajaxupdateqnty(request):
+    itemid=request.GET.get('itemid')
+    qnty=int(request.GET.get('qnty'))
+    try:
+        data=CartItem.objects.get(id=itemid)
+        data.quantity=qnty
+        data.save()
+    except:
+        return redirect('cart:viewcart')

@@ -3,14 +3,8 @@ from accounts.models import User
 from products.models import ProductVariant
 
 class Cart(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def grand_total(self):
@@ -25,23 +19,10 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
 
-    cart = models.ForeignKey(
-        Cart,
-        on_delete=models.CASCADE
-    )
-
-    variant = models.ForeignKey(
-        ProductVariant,
-        on_delete=models.CASCADE
-    )
-
-    quantity = models.PositiveIntegerField(
-        default=1
-    )
-
-    added_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
+    variant = models.ForeignKey(ProductVariant,on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('cart', 'variant')

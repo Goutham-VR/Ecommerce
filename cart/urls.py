@@ -6,4 +6,5 @@ app_name = 'cart'
 urlpatterns = [
     path('add-to-cart/<int:variant_id>/',views.addtocart,name='addtocart'),
     path('viewcart/',views.viewcart,name='viewcart'),
+    path('ajaxupdateqnty/',views.ajaxupdateqnty,name="ajaxupdateqnty"),
 ]
