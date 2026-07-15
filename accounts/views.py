@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from accounts.models import User
+from accounts.models import Address
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -64,3 +65,102 @@ def userlogout(request):
         'accounts/login.html',
         {'msg': 'Logged Out Successfully'}
     )
+
+from accounts.models import Address
+
+def addaddress(request):
+
+    if not request.user.is_authenticated:
+        return redirect('accounts:userlogin')
+
+    if request.method == "POST":
+
+        Address.objects.create(
+            user=request.user,
+            full_name=request.POST.get('full_name'),
+            phone=request.POST.get('phone'),
+            house=request.POST.get('house'),
+            city=request.POST.get('city'),
+            district=request.POST.get('district'),
+            state=request.POST.get('state'),
+            pincode=request.POST.get('pincode'),
+            landmark=request.POST.get('landmark')
+        )
+
+        return redirect('accounts:addresslist')
+
+    return render(
+        request,
+        'accounts/addaddress.html'
+    )
+
+def addresslist(request):
+
+    addresses = Address.objects.filter(
+        user=request.user
+    )
+
+    return render(
+        request,
+        'accounts/addresslist.html',
+        {
+            'addresses': addresses
+        }
+    )
+
+def editaddress(request, address_id):
+
+    address = Address.objects.get(
+        id=address_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+
+        address.full_name = request.POST.get('full_name')
+        address.phone = request.POST.get('phone')
+        address.house = request.POST.get('house')
+        address.city = request.POST.get('city')
+        address.district = request.POST.get('district')
+        address.state = request.POST.get('state')
+        address.pincode = request.POST.get('pincode')
+        address.landmark = request.POST.get('landmark')
+
+        address.save()
+
+        return redirect('accounts:addresslist')
+
+    return render(
+        request,
+        'accounts/editaddress.html',
+        {
+            'address': address
+        }
+    )
+
+def deleteaddress(request, address_id):
+
+    Address.objects.get(
+        id=address_id,
+        user=request.user
+    ).delete()
+
+    return redirect('accounts:addresslist')
+
+def setdefaultaddress(request, address_id):
+
+    Address.objects.filter(
+        user=request.user
+    ).update(
+        is_default=False
+    )
+
+    address = Address.objects.get(
+        id=address_id,
+        user=request.user
+    )
+
+    address.is_default = True
+    address.save()
+
+    return redirect('accounts:addresslist')

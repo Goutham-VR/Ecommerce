@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from products.models import Product
+from cart.models import Cart
+from cart.models import CartItem
 
 def productlist(request):
     products = Product.objects.all()
@@ -17,6 +19,6 @@ def productdetail(request, slug):
         'products/productdetail.html',
         {
             'product': product,
-            'variants': variants
+            'variants': variants,
         }
     )

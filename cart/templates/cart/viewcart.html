@@ -35,15 +35,15 @@
         </td>
 
         <td>
-            <input type="number" class="qty" value="{{ item.quantity }}" min="1" max="{{ item.variant.stock }}" id="qty" onchange="updateQuantity(this, {{ item.id }})">
+            <input type="number" class="qty" value="{{ item.quantity }}" min="1" max="{{ item.variant.stock }}" onchange="updateQuantity(this, {{ item.id }})">
         </td>
 
         <td class="subtotal">
-            {{ item.subtotal }}
+            ₹{{ item.subtotal }}
         </td>
 
         <td>
-            <a href="">
+            <a href="{% url 'cart:removecartitem' item.id %}">
                 Remove
             </a>
         </td>
@@ -66,7 +66,7 @@
     <tr>
         <td colspan="6" align="right">
 
-            <a href="">
+            <a href="{% url 'orders:checkout' %}">
                 Proceed To Checkout
             </a>
 
@@ -74,6 +74,39 @@
     </tr>
 
 </table>
+<script>
+
+function updateQuantity(element, itemid)
+{
+    let qnty = element.value;
+
+    fetch(`/cart/ajaxupdateqnty/?itemid=${itemid}&qnty=${qnty}`)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if(data.success)
+        {
+            element.value = data.quantity;
+
+            let row = element.closest('.cart-row');
+
+            row.querySelector('.subtotal').innerHTML =
+                '₹' + data.subtotal;
+
+            document.getElementById('grand_total').innerHTML =
+                '₹' + data.grand_total;
+        }
+        else
+        {
+            alert('Unable to update quantity');
+        }
+
+    });
+}
+
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -95,21 +128,6 @@
         });
     }
 </script>
-
-<!-- <script>
-    $("#qty").change(function () {
-        var cartitemid = document.getElementById('txt_cartitem').value;
-        console.log(cartitemid);
-        var ur = "";
-        $.ajax({
-            url: ur,
-            data: { cartitemid: cartitemid },
-            success: function (data) {
-                $("#sel_section").html(data);
-            },
-        });
-    });
-</script> -->
 
 <script>
 

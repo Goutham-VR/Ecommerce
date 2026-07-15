@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
+from django.http import JsonResponse
 from cart.models import Cart, CartItem
 from products.models import ProductVariant
-
 
 def addtocart(request, variant_id):
 
@@ -43,7 +43,6 @@ def addtocart(request, variant_id):
         'products:productdetail',
         variant.product.product_slug
     )
-    # return render(request,'products/productdetail.html',{'msg':"Added to Cart"})
 
 def viewcart(request):
 
@@ -63,11 +62,37 @@ def viewcart(request):
     )
 
 def ajaxupdateqnty(request):
-    itemid=request.GET.get('itemid')
-    qnty=int(request.GET.get('qnty'))
+
     try:
-        data=CartItem.objects.get(id=itemid)
-        data.quantity=qnty
-        data.save()
-    except:
-        return redirect('cart:viewcart')
+
+        itemid = request.GET.get('itemid')
+        qnty = int(request.GET.get('qnty'))
+
+        item = CartItem.objects.get(
+            id=itemid,
+            cart__user=request.user
+        )
+
+        qnty = max(1, qnty)
+        qnty = min(qnty, item.variant.stock)
+
+        item.quantity = qnty
+        item.save()
+
+        return JsonResponse({
+            'success': True,
+            'quantity': item.quantity,
+            'subtotal': item.subtotal,
+            'grand_total': item.cart.grand_total
+        })
+
+    except (CartItem.DoesNotExist, ValueError):
+
+        return JsonResponse({
+            'success': False
+        })
+    
+def removecartitem(request, citemid):
+    CartItem.objects.get(id=citemid,cart__user=request.user).delete()
+    return redirect('cart:viewcart')
+

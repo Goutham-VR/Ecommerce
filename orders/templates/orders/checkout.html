@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+
+<h2>Checkout</h2>
+
+<h3>Order Summary</h3>
+
+<table border="1" cellpadding="10">
+
+    <tr>
+        <th>Product</th>
+        <th>Variant</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+    </tr>
+
+    {% for item in cartitems %}
+    <tr>
+
+        <td>
+            {{ item.variant.product.product_name }}
+        </td>
+
+        <td>
+            {{ item.variant.size }}
+            -
+            {{ item.variant.color }}
+        </td>
+
+        <td>
+            ₹{{ item.variant.variant_price }}
+        </td>
+
+        <td>
+            {{ item.quantity }}
+        </td>
+
+        <td>
+            ₹{{ item.subtotal }}
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <td colspan="4">
+            Grand Total
+        </td>
+
+        <td>
+            ₹{{ cart.grand_total }}
+        </td>
+    </tr>
+
+</table>
+
+<br>
+
+<form method="post" action="{% url 'orders:placeorder' %}">
+    {% csrf_token %}
+
+    <h3>Select Delivery Address</h3>
+
+    {% for address in addresses %}
+
+    <div style="border:1px solid black;padding:10px;margin-bottom:10px;">
+
+        <input
+            type="radio"
+            name="address"
+            value="{{ address.id }}"
+            {% if address.is_default %}checked{% endif %}
+            required
+        >
+
+        <b>{{ address.full_name }}</b>
+        <br>
+
+        {{ address.phone }}
+        <br>
+
+        {{ address.house }}
+        <br>
+
+        {% if address.landmark %}
+            {{ address.landmark }}
+            <br>
+        {% endif %}
+
+        {{ address.city }},
+        {{ address.district }},
+        {{ address.state }}
+        -
+        {{ address.pincode }}
+
+    </div>
+
+    {% empty %}
+
+    <p>
+        No address found.
+        <a href="{% url 'accounts:addaddress' %}">
+            Add Address
+        </a>
+    </p>
+
+    {% endfor %}
+
+    <br>
+
+    <button type="submit">
+        Place Order
+    </button>
+
+</form>
+
+</body>
+</html>

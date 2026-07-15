@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Address</title>
+</head>
+<body>
+
+<h2>Edit Address</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        Full Name<br>
+        <input
+            type="text"
+            name="full_name"
+            value="{{ address.full_name }}"
+            required
+        >
+    </p>
+
+    <p>
+        Phone<br>
+        <input
+            type="text"
+            name="phone"
+            value="{{ address.phone }}"
+            required
+        >
+    </p>
+
+    <p>
+        House / Address<br>
+        <textarea
+            name="house"
+            required
+        >{{ address.house }}</textarea>
+    </p>
+
+    <p>
+        Landmark<br>
+        <input
+            type="text"
+            name="landmark"
+            value="{{ address.landmark }}"
+        >
+    </p>
+
+    <p>
+        City<br>
+        <input
+            type="text"
+            name="city"
+            value="{{ address.city }}"
+            required
+        >
+    </p>
+
+    <p>
+        District<br>
+        <input
+            type="text"
+            name="district"
+            value="{{ address.district }}"
+            required
+        >
+    </p>
+
+    <p>
+        State<br>
+        <input
+            type="text"
+            name="state"
+            value="{{ address.state }}"
+            required
+        >
+    </p>
+
+    <p>
+        Pincode<br>
+        <input
+            type="text"
+            name="pincode"
+            value="{{ address.pincode }}"
+            required
+        >
+    </p>
+
+    <button type="submit">
+        Update Address
+    </button>
+
+</form>
+
+</body>
+</html>

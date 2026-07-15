@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Address</title>
+</head>
+<body>
+
+<h2>Add Address</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        Full Name<br>
+        <input type="text" name="full_name" required>
+    </p>
+
+    <p>
+        Phone<br>
+        <input type="text" name="phone" required>
+    </p>
+
+    <p>
+        House / Address<br>
+        <textarea name="house" required></textarea>
+    </p>
+
+    <p>
+        Landmark<br>
+        <input type="text" name="landmark">
+    </p>
+
+    <p>
+        City<br>
+        <input type="text" name="city" required>
+    </p>
+
+    <p>
+        District<br>
+        <input type="text" name="district" required>
+    </p>
+
+    <p>
+        State<br>
+        <input type="text" name="state" required>
+    </p>
+
+    <p>
+        Pincode<br>
+        <input type="text" name="pincode" required>
+    </p>
+
+    <button type="submit">
+        Save Address
+    </button>
+
+</form>
+
+</body>
+</html>

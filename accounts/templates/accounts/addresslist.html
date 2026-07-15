@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Addresses</title>
+</head>
+<body>
+
+<h2>My Addresses</h2>
+
+<a href="{% url 'accounts:addaddress' %}">
+    Add New Address
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="10">
+
+<tr>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Address</th>
+    <th>Default</th>
+    <th>Action</th>
+</tr>
+
+{% for address in addresses %}
+<tr>
+
+    <td>
+        {{ address.full_name }}
+    </td>
+
+    <td>
+        {{ address.phone }}
+    </td>
+
+    <td>
+        {{ address.house }},
+        {{ address.landmark }},
+        {{ address.city }},
+        {{ address.district }},
+        {{ address.state }}
+        -
+        {{ address.pincode }}
+    </td>
+
+    <td>
+        {% if address.is_default %}
+            Yes
+        {% else %}
+            No
+        {% endif %}
+    </td>
+
+    <td>
+
+        <a href="{% url 'accounts:editaddress' address.id %}">
+            Edit
+        </a>
+
+        <br>
+
+        <a href="{% url 'accounts:deleteaddress' address.id %}">
+            Delete
+        </a>
+
+        <br>
+
+        {% if not address.is_default %}
+        <a href="{% url 'accounts:setdefaultaddress' address.id %}">
+            Make Default
+        </a>
+        {% endif %}
+
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5">
+        No Addresses Found
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
