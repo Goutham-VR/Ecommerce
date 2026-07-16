@@ -96,3 +96,17 @@ def removecartitem(request, citemid):
     CartItem.objects.get(id=citemid,cart__user=request.user).delete()
     return redirect('cart:viewcart')
 
+def ordersuccess(request, order_id):
+
+    order = Order.objects.get(
+        id=order_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        'orders/ordersuccess.html',
+        {
+            'order': order
+        }
+    )

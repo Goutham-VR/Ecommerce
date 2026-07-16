@@ -1,0 +1,15 @@
+<h2>Order Placed Successfully</h2>
+
+<p>
+    Order Number:
+    {{ order.order_number }}
+</p>
+
+<p>
+    Amount:
+    ₹{{ order.final_amount }}
+</p>
+
+<a href="{% url 'products:productlist' %}">
+    Continue Shopping
+</a>

@@ -19,10 +19,16 @@ class Order(models.Model):
     final_amount = models.DecimalField(max_digits=10,decimal_places=2)
     status = models.CharField(max_length=20,choices=ORDER_STATUS,default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.order_number
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
     variant = models.ForeignKey(ProductVariant,on_delete=models.CASCADE)
+    # variant = models.ForeignKey(ProductVariant,on_delete=models.PROTECT) # better for If an admin deletes a product variant later, old orders should still exist.
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2)
     subtotal = models.DecimalField(max_digits=10,decimal_places=2)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.order.order_number} - {self.variant}"

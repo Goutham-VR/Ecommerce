@@ -1,0 +1,122 @@
+<h2>Order Details</h2>
+
+<p>
+    <b>Order Number:</b>
+    {{ order.order_number }}
+</p>
+
+<p>
+    <b>Status:</b>
+    {{ order.status }}
+</p>
+
+<p>
+    <b>Order Date:</b>
+    {{ order.created_at }}
+</p>
+
+<hr>
+
+<h3>Delivery Address</h3>
+
+<p>
+    {{ order.address.full_name }}
+</p>
+
+<p>
+    {{ order.address.phone }}
+</p>
+
+<p>
+    {{ order.address.house }}
+</p>
+
+<p>
+    {{ order.address.city }}
+</p>
+
+<p>
+    {{ order.address.district }}
+</p>
+
+<p>
+    {{ order.address.state }}
+</p>
+
+<p>
+    {{ order.address.pincode }}
+</p>
+
+<hr>
+
+<h3>Products</h3>
+
+<table border="1">
+
+<tr>
+    <th>Product</th>
+    <th>Variant</th>
+    <th>Price</th>
+    <th>Qty</th>
+    <th>Subtotal</th>
+</tr>
+
+{% for item in items %}
+
+<tr>
+
+    <td>
+        {{ item.variant.product.product_name }}
+    </td>
+
+    <td>
+        {{ item.variant.size }}
+        -
+        {{ item.variant.color }}
+    </td>
+
+    <td>
+        ₹{{ item.price }}
+    </td>
+
+    <td>
+        {{ item.quantity }}
+    </td>
+
+    <td>
+        ₹{{ item.subtotal }}
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<hr>
+
+<p>
+    <b>Total:</b>
+    ₹{{ order.total_amount }}
+</p>
+
+<p>
+    <b>GST:</b>
+    ₹{{ order.gst_amount }}
+</p>
+
+<p>
+    <b>Discount:</b>
+    ₹{{ order.discount_amount }}
+</p>
+
+<p>
+    <b>Final Amount:</b>
+    ₹{{ order.final_amount }}
+</p>
+
+{% if order.status == 'Pending' %}
+<a href="{% url 'orders:cancelorder' order.id %}">
+    Cancel Order
+</a>
+{% endif %}
