@@ -42,4 +42,8 @@ urlpatterns = [
     path('productvariant/deletevarient/<int:productvariant_id>/<int:product_id>/', views.deletevarient, name='deletevarient'),
     path('productvariant/editvarient/<int:productvariant_id>/<int:product_id>/', views.editvarient, name='editvarient'),
     path('productvariant/addvarientstock/<int:productvariant_id>/<int:product_id>/', views.addvarientstock, name='addvarientstock'),
+
+    path('orderlist/',views.orderlist,name='orderlist'),
+    path('orderdetail/<int:order_id>/',views.orderdetail,name='orderdetail'),
+    path('updateorderstatus/<int:order_id>/',views.updateorderstatus,name='updateorderstatus'),
 ]

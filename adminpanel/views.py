@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from products.models import Brand
@@ -8,6 +8,7 @@ from products.models import Product
 from products.models import ProductImage
 from products.models import ProductVariant
 from products.models import Section
+from orders.models import Order
 
 
 # Create your views here.
@@ -508,3 +509,18 @@ def editvarient(request, productvariant_id,product_id):
         return render(request, 'adminpanel/variant/editvarient.html', {'msg': 'Product variant updated successfully!', 'product_variant': product_variant,'productvariant_id':productvariant_id,'product_id': product_id})
     else:
         return render(request, 'adminpanel/variant/editvarient.html', {'product_variant': product_variant,'product_id': product_id,'productvariant_id':productvariant_id})
+    
+def orderlist(request):
+    orders = Order.objects.all().order_by('-id')
+    return render(request,'adminpanel/orders/orderlist.html',{'orders': orders})
+
+def orderdetail(request, order_id):
+    order = Order.objects.get(id=order_id)
+    items = order.orderitem_set.all()
+    return render(request,'adminpanel/orders/orderdetail.html',{'order': order,'items': items})
+
+def updateorderstatus(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status = request.POST.get('status')
+    order.save()
+    return redirect('adminpanel:orderdetail',order.id)

@@ -1,0 +1,102 @@
+<h2>Order Details</h2>
+
+<p>
+    Order Number :
+    {{ order.order_number }}
+</p>
+
+<p>
+    Customer :
+    {{ order.user.name }}
+</p>
+
+<p>
+    Status :
+    {{ order.status }}
+</p>
+
+<hr>
+
+<h3>Items</h3>
+
+<table border="1">
+
+<tr>
+    <th>Product</th>
+    <th>Variant</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>Subtotal</th>
+</tr>
+
+{% for item in items %}
+
+<tr>
+
+    <td>
+        {{ item.variant.product.product_name }}
+    </td>
+
+    <td>
+        {{ item.variant.size }}
+        -
+        {{ item.variant.color }}
+    </td>
+
+    <td>
+        {{ item.quantity }}
+    </td>
+
+    <td>
+        ₹{{ item.price }}
+    </td>
+
+    <td>
+        ₹{{ item.subtotal }}
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<form method="post"
+      action="{% url 'adminpanel:updateorderstatus' order.id %}">
+
+    {% csrf_token %}
+
+    <select name="status">
+
+        <option value="Pending"
+            {% if order.status == 'Pending' %}selected{% endif %}>
+            Pending
+        </option>
+
+        <option value="Confirmed"
+            {% if order.status == 'Confirmed' %}selected{% endif %}>
+            Confirmed
+        </option>
+
+        <option value="Shipped"
+            {% if order.status == 'Shipped' %}selected{% endif %}>
+            Shipped
+        </option>
+
+        <option value="Delivered"
+            {% if order.status == 'Delivered' %}selected{% endif %}>
+            Delivered
+        </option>
+
+        <option value="Cancelled"
+            {% if order.status == 'Cancelled' %}selected{% endif %}>
+            Cancelled
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Update Status
+    </button>
+
+</form>
