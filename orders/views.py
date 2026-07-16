@@ -4,7 +4,7 @@ from accounts.models import Address
 from orders.models import Order,OrderItem
 import uuid
 from django.contrib.auth.decorators import login_required
-
+from django.db import transaction
 
 # Create your views here.
 @login_required
@@ -16,6 +16,7 @@ def checkout(request):
     return render(request,'orders/checkout.html',{'cart': cart,'cartitems': cartitems,'addresses': addresses})
 
 @login_required
+@transaction.atomic
 def placeorder(request):
     if request.method != "POST":
         return redirect('orders:checkout')
@@ -45,8 +46,8 @@ def placeorder(request):
 
     for item in cartitems:
 
-        if item.quantity > item.variant.stock:
-            return redirect('cart:viewcart')
+        # if item.quantity > item.variant.stock:
+        #     return redirect('cart:viewcart')
 
         OrderItem.objects.create(order=order,variant=item.variant,quantity=item.quantity,price=item.variant.variant_price,subtotal=item.subtotal)
 
