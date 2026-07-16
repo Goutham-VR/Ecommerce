@@ -112,6 +112,56 @@
     {% endfor %}
 
     <br>
+    <h3>Select Payment Method</h3>
+    <table border="1" cellpadding="10">
+
+<tr>
+    <td>Cash On Delivery</td>
+    <td>
+        <input
+            type="radio"
+            name="payment_method"
+            value="COD"
+            checked
+        >
+    </td>
+</tr>
+
+<tr>
+    <td>UPI</td>
+    <td>
+        <input
+            type="radio"
+            name="payment_method"
+            value="UPI"
+        >
+    </td>
+</tr>
+
+<tr>
+    <td>Razorpay</td>
+    <td>
+        <input
+            type="radio"
+            name="payment_method"
+            value="RAZORPAY"
+        >
+    </td>
+</tr>
+
+<tr>
+    <td>Wallet</td>
+    <td>
+        <input
+            type="radio"
+            name="payment_method"
+            value="WALLET"
+        >
+    </td>
+</tr>
+
+</table>
+    <br>
 
     <button type="submit">
         Place Order

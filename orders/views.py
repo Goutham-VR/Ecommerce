@@ -32,7 +32,11 @@ def placeorder(request):
     for item in cartitems:
         if item.quantity > item.variant.stock:
             return redirect('cart:viewcart')
-    
+        
+    payment_method = request.POST.get('payment_method')
+    if not payment_method:
+        return redirect('orders:checkout')
+
     order = Order.objects.create(
         user=request.user,
         address=address,
@@ -41,14 +45,23 @@ def placeorder(request):
         gst_amount=0,
         discount_amount=0,
         supercoin_used=0,
-        final_amount=cart.grand_total
+        final_amount=cart.grand_total,
+        payment_method=payment_method
     )
 
+    if payment_method == "COD":
+        order.payment_status = "Pending"
+        order.save()
+
+    #future proof
+    # if payment_method == "WALLET":
+    #     if wallet.balance >= order.final_amount:
+    #         wallet.balance -= order.final_amount
+    #         order.payment_status = "Paid"
+    #     else:
+    #         return redirect('orders:checkout')
+
     for item in cartitems:
-
-        # if item.quantity > item.variant.stock:
-        #     return redirect('cart:viewcart')
-
         OrderItem.objects.create(order=order,variant=item.variant,quantity=item.quantity,price=item.variant.variant_price,subtotal=item.subtotal)
 
         item.variant.stock -= item.quantity
