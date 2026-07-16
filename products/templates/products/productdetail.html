@@ -99,8 +99,10 @@
             <button type="submit">
                 Add To Cart
             </button>
-
-
+            <br>
+            <a href="{% url 'wishlist:addtowishlist' product.id %}">
+            Add To Wishlist
+        </a>
     </form>
 
     <script>

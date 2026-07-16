@@ -15,6 +15,7 @@ urlpatterns = [
     path('offers/', include('offers.urls')),
     path('wallet/', include('wallet.urls')),
     path('reviews/', include('reviews.urls')),
+    path('wishlist/', include('wishlist.urls')),
 ]
 
 urlpatterns += static(

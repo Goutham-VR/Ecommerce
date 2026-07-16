@@ -6,6 +6,98 @@
     <title>Products</title>
 </head>
 <body>
+    <form method="get">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search Product"
+        value="{{ search }}"
+    >
+
+    <select name="category">
+
+        <option value="">
+            All Categories
+        </option>
+
+        {% for cat in categories %}
+        <option
+            value="{{ cat.id }}"
+            {% if category == cat.id|stringformat:"s" %}
+                selected
+            {% endif %}
+        >
+            {{ cat.category_name }}
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <select name="brand">
+
+        <option value="">
+            All Brands
+        </option>
+
+        {% for b in brands %}
+        <option
+            value="{{ b.id }}"
+            {% if brand == b.id|stringformat:"s" %}
+                selected
+            {% endif %}
+        >
+            {{ b.brand_name }}
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <input
+        type="number"
+        name="min_price"
+        placeholder="Min Price"
+        value="{{ min_price }}"
+    >
+
+    <input
+        type="number"
+        name="max_price"
+        placeholder="Max Price"
+        value="{{ max_price }}"
+    >
+
+    <select name="sort">
+
+        <option value="">
+            Sort By
+        </option>
+
+        <option
+            value="low"
+            {% if sort == "low" %}
+                selected
+            {% endif %}
+        >
+            Price Low To High
+        </option>
+
+        <option
+            value="high"
+            {% if sort == "high" %}
+                selected
+            {% endif %}
+        >
+            Price High To Low
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
     <table cellpadding="10" cellspacing="0" border="1" align="center">
     <tr>
         <th>Name</th>
@@ -19,28 +111,46 @@
 
     {% for product in products %}
 <tr>
+
     <td>{{ product.product_name }}</td>
+
     <td>{{ product.brand.brand_name }}</td>
+
     <td>{{ product.subcategory.section.category.category_name }}</td>
+
     <td>{{ product.subcategory.section.section_name }}</td>
+
     <td>{{ product.subcategory.subcategory_name }}</td>
 
     <td>
-    {% with variant=product.productvariant_set.first %}
-        {% if variant %}
-            ₹{{ variant.variant_price }}
-        {% else %}
-            No Variant
-        {% endif %}
-    {% endwith %}
-</td>
+        {% with variant=product.productvariant_set.first %}
+            {% if variant %}
+                ₹{{ variant.variant_price }}
+            {% else %}
+                No Variant
+            {% endif %}
+        {% endwith %}
+    </td>
 
     <td>
+
         <a href="{% url 'products:productdetail' product.product_slug %}">
             View
         </a>
+
         <br>
-        <a href="">Add To Wishlist</a>
+
+        <a href="{% url 'wishlist:addtowishlistfromlist' product.id %}">
+            Add To Wishlist
+        </a>
+
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7">
+        No Products Found
     </td>
 </tr>
 {% endfor %}
