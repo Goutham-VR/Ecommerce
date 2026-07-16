@@ -9,7 +9,6 @@ class Review(models.Model):
     rating = models.IntegerField()
     review = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         unique_together = (
             'product',
