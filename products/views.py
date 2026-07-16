@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.db.models import Q
+from django.db.models import Avg
 
 from products.models import (Product,Category,Brand)
+from reviews.models import Review
+from orders.models import OrderItem
 from cart.models import Cart
 from cart.models import CartItem
 
@@ -87,11 +90,25 @@ def productdetail(request, slug):
 
     variants = product.productvariant_set.all()
 
+    #review section data
+    reviews = Review.objects.filter(product=product).order_by('-id')
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    review_count = reviews.count()
+    can_review = False
+    if request.user.is_authenticated:
+        can_review = OrderItem.objects.filter(order__user=request.user,order__status='Delivered',variant__product=product).exists()
+        if Review.objects.filter(product=product,user=request.user).exists():
+            can_review = False
+
     return render(
         request,
         'products/productdetail.html',
         {
             'product': product,
             'variants': variants,
+            'reviews': reviews,
+            'avg_rating': avg_rating,
+            'review_count': review_count,
+            'can_review': can_review,
         }
     )
