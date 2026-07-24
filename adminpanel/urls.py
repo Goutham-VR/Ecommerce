@@ -43,7 +43,17 @@ urlpatterns = [
     path('productvariant/editvarient/<int:productvariant_id>/<int:product_id>/', views.editvarient, name='editvarient'),
     path('productvariant/addvarientstock/<int:productvariant_id>/<int:product_id>/', views.addvarientstock, name='addvarientstock'),
 
+    path('coupon/addcoupon/',views.addcoupon,name="addcoupon"),
+    path('coupon/ajaxgeneratecouponcode/',views.ajaxgeneratecouponcode,name="ajaxgeneratecouponcode"),
+    path('coupon/couponlist/',views.couponlist,name="couponlist"),
+    path('coupon/deletecoupon/<int:coupon_id>/',views.deletecoupon,name="deletecoupon"),
+    path('coupon/editcoupon/<int:coupon_id>/',views.editcoupon,name="editcoupon"),
+    path('coupon/activate/<int:coupon_id>/',views.activate,name="activate"),
+    path('coupon/deactivate/<int:coupon_id>/',views.deactivate,name="deactivate"),
+
+
     path('orderlist/',views.orderlist,name='orderlist'),
     path('orderdetail/<int:order_id>/',views.orderdetail,name='orderdetail'),
     path('updateorderstatus/<int:order_id>/',views.updateorderstatus,name='updateorderstatus'),
+
 ]

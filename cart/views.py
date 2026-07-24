@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from cart.models import Cart, CartItem
 from products.models import ProductVariant
+from orders.models import Order
 
 def addtocart(request, variant_id):
 

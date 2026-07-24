@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon List</title>
+</head>
+<body>
+    {% if coupons %}
+    <table border="1" align="center" cellpadding="10">
+        <tr>
+            <td>SL NO</td>
+            <td>CODE</td>
+            <td>DISCOUNT PERCENTAGE</td>
+            <td>MIN AMOUNT</td>
+            <td>MAX DISCOUNT</td>
+            <td>EXPIRY DATE</td>
+            <td>STATUS</td>
+            <td>ACTION</td>
+        </tr>
+        {% for coupon in coupons %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{coupon.coupon_code}}</td>
+            <td>{{coupon.discount_percentage}}</td>
+            <td>{{coupon.minimum_amount}}</td>
+            <td>{{coupon.max_discount}}</td>
+            <td>{{coupon.expiry_date}}</td>
+            <td>
+                {{ coupon.is_active|yesno:"Active,Inactive" }}
+            </td>
+            <td>
+                <a href="{% url 'adminpanel:deletecoupon' coupon.id %}">Delete</a>
+                <br>
+                <a href="{% url 'adminpanel:editcoupon' coupon.id %}">Edit</a>
+                <br>
+
+                <a href="{% url 'adminpanel:activate' coupon.id %}">Activate</a>
+                <br>
+                <a href="{% url 'adminpanel:deactivate' coupon.id %}">Deactivate</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'adminpanel:addcoupon' %}">Add Coupon</a>
+    {% else %}
+    <a href="{% url 'adminpanel:addcoupon' %}">Add Coupon</a>
+    {% endif %}
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'adminpanel:couponlist' %}"
+</script>
+{% endif %}

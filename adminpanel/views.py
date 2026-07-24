@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 from django.utils.text import slugify
+from decimal import Decimal
 from products.models import Brand
 from products.models import Category
 from products.models import SubCategory
@@ -9,6 +11,10 @@ from products.models import ProductImage
 from products.models import ProductVariant
 from products.models import Section
 from orders.models import Order
+from offers.models import Coupon
+
+#helper Function import
+from .utils import generate_coupon_code
 
 
 # Create your views here.
@@ -509,7 +515,106 @@ def editvarient(request, productvariant_id,product_id):
         return render(request, 'adminpanel/variant/editvarient.html', {'msg': 'Product variant updated successfully!', 'product_variant': product_variant,'productvariant_id':productvariant_id,'product_id': product_id})
     else:
         return render(request, 'adminpanel/variant/editvarient.html', {'product_variant': product_variant,'product_id': product_id,'productvariant_id':productvariant_id})
-    
+
+#Coupon Section
+from datetime import date
+
+def addcoupon(request):
+    if request.method == "POST":
+        coupon_code = request.POST.get('txt_couponcode').strip().upper()
+        discount = Decimal(request.POST.get('txt_discount'))
+        minimum_amount = Decimal(request.POST.get('txt_minamount'))
+        expiry_date = request.POST.get('txt_expirydate')
+        max_discount = Decimal(request.POST.get('txt_maxdiscount'))
+
+        if Coupon.objects.filter(coupon_code=coupon_code).exists():
+            return render(request,'adminpanel/coupon/addcoupon.html',{'msg': 'Coupon already exists'})
+
+        if discount <= 0 or discount > 100:
+            return render(request,'adminpanel/coupon/addcoupon.html',{'msg': 'Discount must be between 1 and 100'})
+
+        if minimum_amount < 0:
+            return render(request,'adminpanel/coupon/addcoupon.html',{'msg': 'Minimum amount cannot be negative'})
+
+        if max_discount < 0:
+            return render(request,'adminpanel/coupon/addcoupon.html',{'msg': 'Maximum discount cannot be negative'})
+
+        if expiry_date < str(date.today()):
+            return render(request,'adminpanel/coupon/addcoupon.html',{'msg': 'Expiry date cannot be in the past'})
+
+        Coupon.objects.create(
+            coupon_code=coupon_code,
+            discount_percentage=discount,
+            minimum_amount=minimum_amount,
+            expiry_date=expiry_date,
+            max_discount=max_discount
+        )
+        return render(request,'adminpanel/coupon/addcoupon.html',{'msg':'Coupon Added'})
+    else:
+        return render(request, 'adminpanel/coupon/addcoupon.html')
+
+def ajaxgeneratecouponcode(request):
+    code = generate_coupon_code()
+    return HttpResponse(code)
+
+def couponlist(request):
+    coupons=Coupon.objects.all()
+    return render(request,'adminpanel/coupon/couponlist.html',{'coupons':coupons})
+
+def deletecoupon(request,coupon_id):
+    coupon=get_object_or_404(Coupon,id=coupon_id)
+    coupon.delete()
+    return render(request,'adminpanel/coupon/couponlist.html',{'msg': 'Product variant deleted successfully!'})
+
+def editcoupon(request,coupon_id):
+    coupondata=get_object_or_404(Coupon,id=coupon_id)
+    if request.method=='POST':
+        coupon_code = request.POST.get('txt_couponcode').strip().upper()
+        discount = Decimal(request.POST.get('txt_discount'))
+        minimum_amount = Decimal(request.POST.get('txt_minamount'))
+        expiry_date = request.POST.get('txt_expirydate')
+        max_discount = Decimal(request.POST.get('txt_maxdiscount'))
+
+        if Coupon.objects.filter(coupon_code=coupon_code).exclude(id=coupon_id).exists():
+            return render(request,'adminpanel/coupon/editcoupon.html',{'editdata': coupondata,'msg': 'Coupon already exists','coupon_id':coupon_id})
+
+        if discount <= 0 or discount > 100:
+            return render(request,'adminpanel/coupon/editcoupon.html',{'msg': 'Discount must be between 1 and 100','coupon_id':coupon_id})
+
+        if minimum_amount < 0:
+            return render(request,'adminpanel/coupon/editcoupon.html',{'msg': 'Minimum amount cannot be negative','coupon_id':coupon_id})
+
+        if max_discount < 0:
+            return render(request,'adminpanel/coupon/editcoupon.html',{'msg': 'Maximum discount cannot be negative','coupon_id':coupon_id})
+
+        if expiry_date < str(date.today()):
+            return render(request,'adminpanel/coupon/editcoupon.html',{'msg': 'Expiry date cannot be in the past','coupon_id':coupon_id})
+        
+        coupondata.coupon_code=coupon_code
+        coupondata.discount_percentage=discount
+        coupondata.minimum_amount=minimum_amount
+        coupondata.expiry_date=expiry_date
+        coupondata.max_discount=max_discount
+        coupondata.save()
+        return render(request,'adminpanel/coupon/editcoupon.html',{'editdata':coupondata,'msg':"Coupon Updated",'coupon_id':coupon_id})
+    else:
+        return render(request,'adminpanel/coupon/editcoupon.html',{'editdata':coupondata,'coupon_id':coupon_id})
+
+def activate(request,coupon_id):
+    coupons=Coupon.objects.all()
+    coupondata=get_object_or_404(Coupon,id=coupon_id)
+    coupondata.is_active=True
+    coupondata.save()
+    return render(request,'adminpanel/coupon/couponlist.html',{'coupons':coupons,'msg':"Coupon Activated"})
+
+def deactivate(request,coupon_id):
+    coupons=Coupon.objects.all()
+    coupondata=get_object_or_404(Coupon,id=coupon_id)
+    coupondata.is_active=False
+    coupondata.save()
+    return render(request,'adminpanel/coupon/couponlist.html',{'coupons':coupons,'msg':"Coupon Deactivated"})
+
+#Order Section
 def orderlist(request):
     orders = Order.objects.all().order_by('-id')
     return render(request,'adminpanel/orders/orderlist.html',{'orders': orders})

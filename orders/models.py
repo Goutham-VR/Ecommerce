@@ -34,8 +34,8 @@ class Order(models.Model):
     final_amount = models.DecimalField(max_digits=10,decimal_places=2)
     status = models.CharField(max_length=20,choices=ORDER_STATUS,default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    payment_method = models.CharField(max_length=20,default='COD')
-    payment_status = models.CharField(max_length=20,default='Pending')
+    payment_method = models.CharField(max_length=20,default='COD',choices=PAYMENT_METHOD,)
+    payment_status = models.CharField(max_length=20,default='Pending',choices=PAYMENT_STATUS,)
     def __str__(self):
         return self.order_number
 
